@@ -1,0 +1,12 @@
+{
+  "name": "Football Tournament Stats",
+  "short_name": "FootballStats",
+  "description": "Frontend MVP for football tournament tracking",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#111111",
+  "icons": [
+    {"src": "/icons/app-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable"}
+  ]
+}
