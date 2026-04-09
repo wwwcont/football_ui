@@ -6,6 +6,7 @@ import { MatchCard, PlayerCard, TeamCard } from '../../components/cards/Cards';
 import { Button, SearchInput, Select } from '../../components/ui/FormControls';
 import { EmptyState, PageContainer, SectionHeader, StatCard, StatusBadge } from '../../components/ui/Primitives';
 import { matchById, playerById, teamById } from '../../utils/selectors';
+import tournamentLogo from '../../logo.jpg';
 
 const formatStatus = (status: string) => ({ upcoming: 'Скоро', live: 'Идет', finished: 'Завершен', postponed: 'Перенесен', cancelled: 'Отменен' }[status] ?? status);
 const formatEventType = (type: string) => ({ goal: 'Гол', yellow_card: 'Желтая карточка', red_card: 'Красная карточка', substitution: 'Замена', own_goal: 'Автогол', penalty: 'Пенальти', admin: 'Событие' }[type] ?? type);

@@ -1,8 +1,20 @@
 import { ReactNode } from 'react';
+import { ArrowLeft } from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export function PageContainer({ title, subtitle, action, children }: { title: string; subtitle?: string; action?: ReactNode; children: ReactNode }) {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const showBackButton = location.pathname !== '/';
+
   return (
     <div className="mx-auto w-full max-w-6xl p-4 pb-24 md:p-6 md:pb-8">
+      {showBackButton && (
+        <button className="btn btn-secondary mb-3" onClick={() => navigate(-1)}>
+          <ArrowLeft className="mr-1 h-4 w-4" />
+          Назад
+        </button>
+      )}
       <div className="mb-5 flex flex-wrap items-start justify-between gap-3 border-b border-zinc-200 pb-4 dark:border-zinc-800">
         <div className="min-w-0">
           <h1 className="text-xl font-semibold md:text-2xl">{title}</h1>
