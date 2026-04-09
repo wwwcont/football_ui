@@ -20,12 +20,6 @@ const recentMatchesForTeam = (teamId: string, currentMatchId: string) =>
 export function HomePage() {
   return (
     <PageContainer title="United Football League" subtitle="Официальная панель турнира">
-      <section className="rounded-2xl border border-zinc-800 bg-black px-4 py-4">
-        <div className="flex items-center justify-between gap-4">
-          <img src={tournamentLogo} className="h-12 w-12 rounded-lg object-cover md:h-14 md:w-14" alt="Лого турнира" />
-          <p className="text-right text-lg font-semibold text-zinc-100 md:text-2xl">Турнирная панель</p>
-        </div>
-      </section>
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         <StatCard label="Команд" value={teams.length} />
         <StatCard label="Игроков" value={players.length} />
