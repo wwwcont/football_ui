@@ -40,10 +40,7 @@ export function AppRouter() {
         <Route path="/players" element={<PlayersPage />} />
         <Route path="/players/:playerId" element={<PlayerDetailsPage />} />
         <Route path="/search" element={<SearchPage />} />
-      </Route>
-
-      <Route path="/auth" element={<AuthShell />}>
-        <Route path="login" element={<LoginPage />} />
+        <Route path="/auth/login" element={<LoginPage />} />
       </Route>
 
       <Route path="/admin/login" element={<AuthShell />}>
