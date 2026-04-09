@@ -11,7 +11,13 @@ function ThemeSwitch() {
   );
 }
 
-const hasSession = () => Boolean(localStorage.getItem('leagueSession'));
+const hasSession = () => {
+  try {
+    return Boolean(localStorage.getItem('leagueSession'));
+  } catch {
+    return false;
+  }
+};
 
 export function BottomNav() {
   const inCabinet = hasSession();
@@ -48,7 +54,7 @@ export function DesktopTopbar() {
     <header className="sticky top-0 z-10 hidden border-b border-zinc-800 bg-black/95 backdrop-blur md:block">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 p-4">
         <Link to="/" className="flex items-center gap-3 text-zinc-100">
-          <img src="/icons/tournament-logo.svg" className="h-9 w-9 object-contain" />
+          <img src="/icons/tournament-logo.svg" className="h-9 w-9 object-contain" alt="Логотип турнира" />
           <span className="font-semibold">United Football League</span>
         </Link>
         <div className="flex items-center gap-4 text-sm text-zinc-300">
