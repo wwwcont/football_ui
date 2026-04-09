@@ -2,6 +2,11 @@ import { ErrorState, LoadingState } from '../../components/ui/PageState';
 import { useStandings } from '../../hooks/useStandings';
 import { useTeams } from '../../hooks/useTeams';
 
+function formatGoalLine(gf: number, ga: number, gd: number) {
+  const diff = gd > 0 ? `+${gd}` : `${gd}`;
+  return `${gf}-${ga}^${diff}`;
+}
+
 export function StandingsPage() {
   const standings = useStandings();
   const teams = useTeams();
@@ -10,33 +15,41 @@ export function StandingsPage() {
   if (standings.error || teams.error) return <ErrorState message={standings.error ?? teams.error ?? undefined} />;
 
   return (
-    <div className="overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900">
-      <table className="min-w-full text-sm">
-        <thead className="bg-zinc-950 text-xs uppercase text-zinc-400">
-          <tr>
-            <th className="px-3 py-2 text-left">#</th>
-            <th className="px-3 py-2 text-left">Команда</th>
-            <th className="px-2 py-2 text-right">В</th>
-            <th className="px-2 py-2 text-right">Н</th>
-            <th className="px-2 py-2 text-right">П</th>
-            <th className="px-3 py-2 text-right">Мячи</th>
-            <th className="px-3 py-2 text-right">О</th>
-          </tr>
-        </thead>
-        <tbody>
-          {standings.data.map((row) => (
-            <tr key={row.teamId} className="border-t border-zinc-800">
-              <td className="px-3 py-2">{row.position}</td>
-              <td className="px-3 py-2">{teams.data.find((item) => item.id === row.teamId)?.name}</td>
-              <td className="px-2 py-2 text-right tabular-nums">{row.won}</td>
-              <td className="px-2 py-2 text-right tabular-nums">{row.drawn}</td>
-              <td className="px-2 py-2 text-right tabular-nums">{row.lost}</td>
-              <td className="px-3 py-2 text-right tabular-nums">{row.gf}:{row.ga}</td>
-              <td className="px-3 py-2 text-right font-semibold tabular-nums">{row.points}</td>
+    <section className="rounded-xl border border-zinc-800 bg-zinc-900">
+      <div className="overflow-x-auto">
+        <table className="min-w-full text-xs sm:text-sm">
+          <thead className="border-b border-zinc-800 text-zinc-400">
+            <tr>
+              <th className="px-2 py-2 text-left font-medium">#</th>
+              <th className="px-2 py-2 text-left font-medium">Команда</th>
+              <th className="px-1.5 py-2 text-right font-medium">И</th>
+              <th className="px-1.5 py-2 text-right font-medium">В-Н-П</th>
+              <th className="px-1.5 py-2 text-right font-medium">Мячи</th>
+              <th className="px-2 py-2 text-right font-medium">О</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody>
+            {standings.data.map((row) => {
+              const team = teams.data.find((item) => item.id === row.teamId);
+              return (
+                <tr key={row.teamId} className="border-t border-zinc-800">
+                  <td className="px-2 py-2 text-zinc-300 tabular-nums">{row.position}</td>
+                  <td className="px-2 py-2">
+                    <div className="flex items-center gap-2">
+                      <img src={team?.logoUrl} alt={team?.name ?? 'Команда'} className="h-5 w-5 rounded-full border border-zinc-700 object-cover" />
+                      <span className="whitespace-nowrap text-zinc-100">{team?.shortName ?? team?.name}</span>
+                    </div>
+                  </td>
+                  <td className="px-1.5 py-2 text-right tabular-nums text-zinc-300">{row.played}</td>
+                  <td className="px-1.5 py-2 text-right tabular-nums text-zinc-300">{row.won}-{row.drawn}-{row.lost}</td>
+                  <td className="px-1.5 py-2 text-right tabular-nums text-zinc-300">{formatGoalLine(row.gf, row.ga, row.gd)}</td>
+                  <td className="px-2 py-2 text-right font-semibold tabular-nums text-zinc-100">{row.points}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </section>
   );
 }
