@@ -2,11 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-body { @apply bg-zinc-100 text-zinc-900 antialiased transition-colors dark:bg-[#0d0d0d] dark:text-zinc-100; }
+:root {
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  color-scheme: dark;
+}
 
-.card { @apply rounded-2xl border border-zinc-200 bg-white p-4 shadow-soft transition-colors dark:border-zinc-800 dark:bg-[#151515]; }
-.input { @apply w-full rounded-xl border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:outline-none focus:ring-2 focus:ring-[#6f1d2b] dark:border-zinc-700 dark:bg-[#111111] dark:text-zinc-100 dark:focus:ring-[#8a2d3d]; }
-.btn { @apply inline-flex items-center justify-center rounded-xl border border-[#5c1824] px-4 py-2 text-sm font-medium transition active:scale-95 dark:border-[#8a2d3d]; }
-.btn-primary { @apply bg-[#6f1d2b] text-white hover:bg-[#5c1824] dark:bg-[#8a2d3d] dark:text-zinc-100 dark:hover:bg-[#6f1d2b]; }
-.btn-secondary { @apply bg-white text-zinc-900 hover:bg-zinc-100 dark:bg-[#181818] dark:text-zinc-100 dark:hover:bg-zinc-800; }
-.section-stack { @apply space-y-4 md:space-y-5; }
+body {
+  @apply m-0 bg-zinc-950 text-zinc-100 antialiased;
+}
+
+* {
+  @apply box-border;
+}
