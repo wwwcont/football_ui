@@ -28,7 +28,7 @@ const adminAccounts: AdminAccount[] = adminUsers.map((u) => ({
 }));
 
 export function AdminLoginPage({ onLogin }: { onLogin: (session: AdminSession) => void }) {
-  const { register, handleSubmit, setError, formState: { errors } } = useForm<{ email: string; password: string }>();
+  const { register, handleSubmit, setError, setValue, formState: { errors } } = useForm<{ email: string; password: string }>();
 
   const submit = ({ email, password }: { email: string; password: string }) => {
     const normalizedEmail = email.toLowerCase();
@@ -54,6 +54,19 @@ export function AdminLoginPage({ onLogin }: { onLogin: (session: AdminSession) =
         <Input type="password" placeholder="Пароль" {...register('password', { required: true })} />
         {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
         <Button type="submit" className="w-full">Войти</Button>
+        <Button
+          type="button"
+          className="w-full"
+          onClick={() => {
+            const mockAdmin = adminAccounts[0];
+            if (!mockAdmin) return;
+            setValue('email', mockAdmin.email);
+            setValue('password', mockAdmin.password);
+            onLogin({ role: 'admin', userId: mockAdmin.id });
+          }}
+        >
+          Войти как демо-админ
+        </Button>
       </form>
       <div className="card mx-auto mt-4 max-w-md text-sm text-zinc-500 dark:text-zinc-400">
         Демо доступы: капитан команды и администратор лиги. Для всех аккаунтов пароль: <b>123456</b>.

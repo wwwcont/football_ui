@@ -6,6 +6,7 @@ import { MatchCard, PlayerCard, TeamCard } from '../../components/cards/Cards';
 import { Button, SearchInput, Select } from '../../components/ui/FormControls';
 import { EmptyState, PageContainer, SectionHeader, StatCard, StatusBadge } from '../../components/ui/Primitives';
 import { matchById, playerById, teamById } from '../../utils/selectors';
+import tournamentLogo from '../../logo.jpg';
 
 const formatStatus = (status: string) => ({ upcoming: 'Скоро', live: 'Идет', finished: 'Завершен', postponed: 'Перенесен', cancelled: 'Отменен' }[status] ?? status);
 const formatEventType = (type: string) => ({ goal: 'Гол', yellow_card: 'Желтая карточка', red_card: 'Красная карточка', substitution: 'Замена', own_goal: 'Автогол', penalty: 'Пенальти', admin: 'Событие' }[type] ?? type);
@@ -19,8 +20,11 @@ const recentMatchesForTeam = (teamId: string, currentMatchId: string) =>
 export function HomePage() {
   return (
     <PageContainer title="United Football League" subtitle="Официальная панель турнира">
-      <section className="rounded-2xl border border-zinc-800 bg-black px-4 py-6 text-center">
-        <img src="/icons/tournament-logo.svg" className="mx-auto h-28 w-auto object-contain md:h-36" />
+      <section className="rounded-2xl border border-zinc-800 bg-black px-4 py-4">
+        <div className="flex items-center justify-between gap-4">
+          <img src={tournamentLogo} className="h-12 w-12 rounded-lg object-cover md:h-14 md:w-14" alt="Лого турнира" />
+          <p className="text-right text-lg font-semibold text-zinc-100 md:text-2xl">Турнирная панель</p>
+        </div>
       </section>
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         <StatCard label="Команд" value={teams.length} />
