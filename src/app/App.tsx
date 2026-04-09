@@ -2,7 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { useMockAdminAuth } from '../hooks/useMockAdminAuth';
 import { AdminLayout } from '../layouts/AdminLayout';
 import { PublicLayout } from '../layouts/PublicLayout';
-import { AdminDashboardPage, AdminLoginPage } from '../pages/admin/AdminPages';
+import { AdminDashboardPage, AdminEventsPage, AdminLoginPage, AdminPlayersPage, AdminTeamsPage } from '../pages/admin/AdminPages';
 import { EventsPage, HomePage, MatchDetailsPage, MatchesPage, NotFound, PlayerDetailsPage, PlayersPage, SearchPage, TablePage, TeamDetailsPage, TeamsPage } from '../pages/public/PublicPages';
 
 export function App() {
@@ -25,6 +25,9 @@ export function App() {
       <Route path="/login" element={auth.loggedIn ? <Navigate to="/cabinet" replace /> : <AdminLoginPage onLogin={auth.login} />} />
       <Route path="/cabinet" element={auth.loggedIn ? <AdminLayout onLogout={auth.logout} /> : <Navigate to="/login" replace />}>
         <Route index element={auth.session ? <AdminDashboardPage session={auth.session} /> : null} />
+        <Route path="teams" element={auth.session ? <AdminTeamsPage session={auth.session} /> : null} />
+        <Route path="players" element={auth.session ? <AdminPlayersPage session={auth.session} /> : null} />
+        <Route path="events" element={auth.session ? <AdminEventsPage session={auth.session} /> : null} />
       </Route>
 
       <Route path="*" element={<NotFound />} />

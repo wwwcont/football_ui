@@ -1,6 +1,7 @@
-import { BarChart3, Calendar, Home, LogIn, Moon, Search, Sun, UserRound } from 'lucide-react';
-import { Link, NavLink } from 'react-router-dom';
+import { ArrowLeft, BarChart3, Calendar, Home, LogIn, Moon, Search, Sun, UserRound } from 'lucide-react';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from '../../app/ThemeProvider';
+import tournamentLogo from '../../logo.jpg';
 
 function ThemeSwitch() {
   const { theme, toggleTheme } = useTheme();
@@ -11,7 +12,13 @@ function ThemeSwitch() {
   );
 }
 
-const hasSession = () => Boolean(localStorage.getItem('leagueSession'));
+const hasSession = () => {
+  try {
+    return Boolean(localStorage.getItem('leagueSession'));
+  } catch {
+    return false;
+  }
+};
 
 export function BottomNav() {
   const inCabinet = hasSession();
@@ -42,23 +49,25 @@ export function BottomNav() {
 }
 
 export function DesktopTopbar() {
-  const inCabinet = hasSession();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const canGoBack = location.pathname !== '/';
 
   return (
-    <header className="sticky top-0 z-10 hidden border-b border-zinc-800 bg-black/95 backdrop-blur md:block">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 p-4">
-        <Link to="/" className="flex items-center gap-3 text-zinc-100">
-          <img src="/icons/tournament-logo.svg" className="h-9 w-9 object-contain" />
-          <span className="font-semibold">United Football League</span>
-        </Link>
-        <div className="flex items-center gap-4 text-sm text-zinc-300">
-          <Link to="/table">Таблица</Link>
-          <Link to="/matches">Матчи</Link>
-          <Link to="/teams">Команды</Link>
-          <Link to="/players">Игроки</Link>
-          <Link to={inCabinet ? '/cabinet' : '/login'}>{inCabinet ? 'Личный кабинет' : 'Вход'}</Link>
-          <ThemeSwitch />
+    <header className="sticky top-0 z-10 border-b border-zinc-800 bg-black">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 p-3">
+        <div className="w-10">
+          {canGoBack && (
+            <button className="rounded-lg p-2 text-zinc-100 transition hover:bg-zinc-800" onClick={() => navigate(-1)} aria-label="Назад">
+              <ArrowLeft className="h-5 w-5" />
+            </button>
+          )}
         </div>
+        <Link to="/" className="flex items-center gap-3 text-zinc-100">
+          <img src={tournamentLogo} className="h-14 w-14 rounded-lg object-cover" alt="Лого турнира" />
+          <span className="text-lg font-semibold">Турнирная панель</span>
+        </Link>
+        <div className="w-10" />
       </div>
     </header>
   );
