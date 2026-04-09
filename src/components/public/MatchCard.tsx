@@ -10,10 +10,10 @@ export function MatchCard({ match, homeTeam, awayTeam }: { match: Match; homeTea
       : `${match.homeScore ?? 0}:${match.awayScore ?? 0}`;
 
   return (
-    <Link to={`/matches/${match.id}`} className="block rounded-xl bg-zinc-900 px-3 py-3">
+    <Link to={`/matches/${match.id}`} className="panel-matte block rounded-xl px-3 py-3">
       <div className="flex items-center justify-between text-[11px] text-zinc-500">
         <span>Тур {match.round}</span>
-        <span className={match.status === 'live' ? 'font-semibold text-rose-300' : ''}>{statusLabel[match.status]}</span>
+        <span className={match.status === 'live' ? 'font-semibold text-[#e4cb86]' : ''}>{statusLabel[match.status]}</span>
       </div>
       <div className="mt-2 grid grid-cols-[1fr_auto_1fr] items-center gap-2">
         <div className="flex min-w-0 items-center gap-2">

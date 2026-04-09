@@ -5,12 +5,33 @@
 :root {
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
   color-scheme: dark;
+  --matte-bg: #141414;
+  --panel-bg: #1c1c1c;
+  --line-soft: #8f7a3f;
+  --line-soft-strong: #b79b4b;
 }
 
 body {
-  @apply m-0 bg-zinc-950 text-zinc-100 antialiased;
+  @apply m-0 text-zinc-100 antialiased;
+  background: var(--matte-bg);
 }
 
 * {
   @apply box-border;
+}
+
+@layer components {
+  .panel-matte {
+    background: color-mix(in srgb, var(--panel-bg) 92%, transparent);
+    border: 1px solid color-mix(in srgb, var(--line-soft) 62%, transparent);
+  }
+
+  .panel-soft {
+    background: color-mix(in srgb, var(--panel-bg) 88%, transparent);
+    border: 1px solid color-mix(in srgb, var(--line-soft) 45%, transparent);
+  }
+
+  .line-accent {
+    border-color: color-mix(in srgb, var(--line-soft-strong) 72%, transparent);
+  }
 }

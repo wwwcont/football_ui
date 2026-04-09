@@ -4,7 +4,7 @@ import { TeamLogo } from './TeamLogo';
 
 export function Scoreboard({ match, homeTeam, awayTeam }: { match: Match; homeTeam?: Team; awayTeam?: Team }) {
   return (
-    <div className="sticky top-16 z-10 rounded-xl bg-zinc-900 p-4">
+    <div className="panel-matte sticky top-16 z-10 rounded-xl p-4">
       <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
         <div className="flex items-center gap-2">
           <TeamLogo team={homeTeam} className="h-8 w-8 rounded-full object-cover" />
