@@ -11,6 +11,7 @@ import { AdminPlayersPage } from '../pages/admin/AdminPlayersPage';
 import { AdminSchedulePage } from '../pages/admin/AdminSchedulePage';
 import { AdminTeamsPage } from '../pages/admin/AdminTeamsPage';
 import { AdminUsersPage } from '../pages/admin/AdminUsersPage';
+import { CabinetManagementTab, CabinetPage, CabinetProfileTab } from '../pages/public/CabinetPage';
 import { HomePage } from '../pages/public/HomePage';
 import { MatchDetailsPage } from '../pages/public/MatchDetailsPage';
 import { MatchesPage } from '../pages/public/MatchesPage';
@@ -27,6 +28,11 @@ function AdminGuard() {
   return isAuthenticated ? <Outlet /> : <Navigate to="/admin/login?next=/admin" replace />;
 }
 
+function SessionGuard() {
+  const { isAuthenticated } = useAdminSession();
+  return isAuthenticated ? <Outlet /> : <Navigate to="/auth/login?next=/cabinet" replace />;
+}
+
 export function AppRouter() {
   return (
     <Routes>
@@ -41,6 +47,13 @@ export function AppRouter() {
         <Route path="/players/:playerId" element={<PlayerDetailsPage />} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="/auth/login" element={<LoginPage />} />
+
+        <Route element={<SessionGuard />}>
+          <Route path="/cabinet" element={<CabinetPage />}>
+            <Route index element={<CabinetProfileTab />} />
+            <Route path="management" element={<CabinetManagementTab />} />
+          </Route>
+        </Route>
       </Route>
 
       <Route path="/admin/login" element={<AuthShell />}>
