@@ -1,7 +1,7 @@
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { cn } from '../lib/format';
 import { useAdminSession } from '../hooks/useAdminSession';
-import { appLogoDataUrl } from '../logo';
+import { APP_LOGO_URL, FALLBACK_LOGO_URL } from '../lib/logoAsset';
 
 const adminItems = [
   { to: '/admin', label: 'Дашборд' },
@@ -20,7 +20,7 @@ export function AdminShell() {
     <div className="min-h-screen bg-zinc-950 text-zinc-100 md:grid md:grid-cols-[250px_1fr]">
       <aside className="hidden bg-zinc-900 p-4 md:block">
         <Link to="/admin" className="flex items-center gap-2 text-sm font-semibold">
-          <img src={appLogoDataUrl} alt="Лого" className="h-8 w-8 rounded-lg object-cover" />
+          <img src={APP_LOGO_URL} alt="Лого" className="h-8 w-8 rounded-lg object-cover" onError={(event) => { event.currentTarget.src = FALLBACK_LOGO_URL; }} />
           АДМИН ПАНЕЛЬ
         </Link>
         <p className="mt-1 text-xs text-zinc-400">{session?.name ?? 'Сессия'}</p>

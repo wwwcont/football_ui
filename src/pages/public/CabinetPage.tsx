@@ -65,7 +65,7 @@ export function CabinetProfileTab() {
 export function CabinetManagementTab() {
   return (
     <div className="space-y-2 text-sm text-zinc-300">
-      <p>Администратор может редактировать команды, игроков, расписание, матчи и события.</p>
+      <p>Администратор может редактировать команды, игроков, расписание, матчи, пользователей и параметры отображения таблицы через UI.</p>
       <p>
         Для полного набора инструментов откройте раздел <Link className="text-rose-200" to="/admin">/admin</Link>.
       </p>

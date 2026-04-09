@@ -1,7 +1,7 @@
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { appLogoDataUrl } from '../logo';
 import { useAdminSession } from '../hooks/useAdminSession';
 import { cn } from '../lib/format';
+import { APP_LOGO_URL, FALLBACK_LOGO_URL } from '../lib/logoAsset';
 
 const primaryNavItems = [
   { to: '/', label: 'Главная' },
@@ -29,8 +29,8 @@ export function PublicShell() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100">
-      <header className="sticky top-0 z-20 bg-zinc-950/95 backdrop-blur">
+    <div className="min-h-screen bg-black text-zinc-100">
+      <header className="sticky top-0 z-20 bg-black">
         <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4">
           <div className="flex items-center gap-3">
             {!isHome ? (
@@ -43,8 +43,15 @@ export function PublicShell() {
               </button>
             ) : null}
             <Link to="/" className="flex items-center gap-2 text-sm font-semibold tracking-wide text-zinc-100">
-              <img src={appLogoDataUrl} alt="Лого" className="h-8 w-8 rounded-lg object-cover" />
-              ФУТБОЛЬНАЯ ЛИГА
+              <img
+                src={APP_LOGO_URL}
+                alt="Лого"
+                className="h-9 w-9 rounded-lg object-cover"
+                onError={(event) => {
+                  event.currentTarget.src = FALLBACK_LOGO_URL;
+                }}
+              />
+              <span>футбольный турнир</span>
             </Link>
           </div>
           <nav className="hidden items-center gap-4 md:flex">
@@ -53,7 +60,7 @@ export function PublicShell() {
                 key={item.to}
                 to={item.to}
                 className={({ isActive }) =>
-                  cn('text-sm', isActive ? 'font-semibold text-rose-200' : 'text-zinc-400')
+                  cn('text-sm uppercase', isActive ? 'font-semibold text-zinc-100' : 'text-zinc-400')
                 }
               >
                 {item.label}
@@ -62,10 +69,7 @@ export function PublicShell() {
             <NavLink
               to={profileItem.to}
               className={({ isActive }) =>
-                cn(
-                  'rounded-lg bg-zinc-900 px-3 py-2 text-xs',
-                  isActive ? 'bg-[#3a1119] text-rose-100' : 'text-zinc-300',
-                )
+                cn('rounded-lg bg-zinc-900 px-3 py-2 text-xs uppercase', isActive ? 'text-zinc-100' : 'text-zinc-300')
               }
             >
               {profileItem.label}
@@ -78,7 +82,7 @@ export function PublicShell() {
         <Outlet />
       </main>
 
-      <nav className="fixed inset-x-0 bottom-0 z-20 bg-zinc-950/95 pb-[max(env(safe-area-inset-bottom),0px)] backdrop-blur md:hidden">
+      <nav className="fixed inset-x-0 bottom-0 z-20 bg-black pb-[max(env(safe-area-inset-bottom),0px)] md:hidden">
         <div className="grid grid-cols-5 px-2 py-2">
           {[...primaryNavItems, profileItem].map((item) => (
             <NavLink
@@ -86,8 +90,8 @@ export function PublicShell() {
               to={item.to}
               className={({ isActive }) =>
                 cn(
-                  'rounded-xl px-2 py-3.5 text-center text-xs font-medium transition-colors',
-                  isActive ? 'bg-[#4f1824] text-rose-100' : 'text-zinc-400',
+                  'rounded-xl px-2 py-3.5 text-center text-xs font-medium uppercase transition-colors',
+                  isActive ? 'bg-zinc-800 text-zinc-100' : 'text-zinc-400',
                 )
               }
             >
