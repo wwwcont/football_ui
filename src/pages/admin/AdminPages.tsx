@@ -1,25 +1,112 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link, useParams } from 'react-router-dom';
-import { adminUsers, allEvents, matches, players, scheduleEntries, teams } from '../../data/mockData';
-import { Button, Input, SearchInput, Select } from '../../components/ui/FormControls';
-import { EmptyState, PageContainer, SectionHeader, StatCard } from '../../components/ui/Primitives';
+import { players, teams } from '../../data/mockData';
+import { Button, Input, Select } from '../../components/ui/FormControls';
+import { EmptyState, PageContainer, SectionHeader } from '../../components/ui/Primitives';
 
-export function AdminLoginPage({ onLogin }: { onLogin: () => void }) {
-  const { register, handleSubmit } = useForm<{ email: string; password: string }>();
-  return <PageContainer title="Admin Login" subtitle="Mock auth only"><form className="card mx-auto max-w-md space-y-3 p-4" onSubmit={handleSubmit(() => onLogin())}><Input placeholder="Email" {...register('email')} /><Input type="password" placeholder="Password" {...register('password')} /><Button type="submit">Sign in</Button></form></PageContainer>;
+type CaptainUser = { id: string; email: string; password: string; teamId: string; name: string };
+
+type TeamDraft = Record<string, { description: string; logoUrl: string }>;
+type PlayerDraft = Record<string, { displayName: string; position: 'GK' | 'DF' | 'MF' | 'FW'; number: number }>;
+
+const captainUsers: CaptainUser[] = [
+  { id: 'c1', email: 'captain1@league.local', password: '123456', teamId: 't1', name: 'Капитан СВЛ' },
+  { id: 'c2', email: 'captain2@league.local', password: '123456', teamId: 't2', name: 'Капитан РРЦ' },
+  { id: 'c3', email: 'captain3@league.local', password: '123456', teamId: 't3', name: 'Капитан СКЗ' },
+];
+
+export function AdminLoginPage({ onLogin }: { onLogin: (captainId: string) => void }) {
+  const { register, handleSubmit, setError, formState: { errors } } = useForm<{ email: string; password: string }>();
+
+  const submit = ({ email, password }: { email: string; password: string }) => {
+    const account = captainUsers.find((u) => u.email.toLowerCase() === email.toLowerCase() && u.password === password);
+    if (!account) {
+      setError('password', { message: 'Неверная почта или пароль.' });
+      return;
+    }
+    onLogin(account.id);
+  };
+
+  return (
+    <PageContainer title="Вход" subtitle="Личный кабинет капитана команды">
+      <form className="card mx-auto max-w-md space-y-3 p-4" onSubmit={handleSubmit(submit)}>
+        <Input placeholder="Почта" {...register('email', { required: true })} />
+        <Input type="password" placeholder="Пароль" {...register('password', { required: true })} />
+        {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
+        <Button type="submit" className="w-full">Войти</Button>
+      </form>
+      <div className="card mx-auto mt-4 max-w-md text-sm text-zinc-500 dark:text-zinc-400">
+        Демо-аккаунты создаются администратором. Капитаны могут редактировать только описание команды, логотип и карточки игроков своей команды.
+      </div>
+    </PageContainer>
+  );
 }
 
-export const AdminDashboardPage = () => <PageContainer title="Admin Dashboard"><div className="grid grid-cols-2 gap-3 md:grid-cols-6"><StatCard label="Teams" value={teams.length} /><StatCard label="Players" value={players.length} /><StatCard label="Matches" value={matches.length} /><StatCard label="Events" value={allEvents.length} /><StatCard label="Pending" value={matches.filter((m)=>m.status==='upcoming').length} /><StatCard label="Soon" value={scheduleEntries.length} /></div></PageContainer>;
+export function AdminDashboardPage({ captainId }: { captainId: string }) {
+  const captain = captainUsers.find((u) => u.id === captainId);
+  const managedTeam = teams.find((t) => t.id === captain?.teamId);
+  const teamPlayers = players.filter((p) => p.teamId === managedTeam?.id);
 
-export function AdminTeamsPage(){const [q,setQ]=useState(''); const list=teams.filter((t)=>t.name.toLowerCase().includes(q.toLowerCase())); return <PageContainer title="Admin Teams" action={<Button>Create team</Button>}><SearchInput placeholder="Search team" value={q} onChange={(e)=>setQ(e.target.value)} /><div className="mt-3 space-y-2">{list.map((t)=><div key={t.id} className="card flex items-center justify-between p-3"><span>{t.name}</span><div className="flex gap-2"><Button variant="secondary">Edit</Button><Link className="btn btn-secondary" to={`/teams/${t.id}`}>Open</Link></div></div>)}</div></PageContainer>}
+  const [teamDraft, setTeamDraft] = useState<TeamDraft>(() =>
+    teams.reduce((acc, team) => ({ ...acc, [team.id]: { description: team.description, logoUrl: team.logoUrl } }), {}),
+  );
 
-export function AdminPlayersPage(){return <PageContainer title="Admin Players" action={<Button>Add player</Button>}><div className="card overflow-hidden"><table className="w-full text-sm"><thead className="bg-zinc-100"><tr><th className="p-2 text-left">Name</th><th>Team</th><th>Status</th><th></th></tr></thead><tbody>{players.map((p)=><tr key={p.id} className="border-t"><td className="p-2">{p.displayName}</td><td>{teams.find((t)=>t.id===p.teamId)?.shortName}</td><td>{p.status}</td><td><Button variant="secondary" className="my-1">Edit</Button></td></tr>)}</tbody></table></div></PageContainer>}
+  const [playerDraft, setPlayerDraft] = useState<PlayerDraft>(() =>
+    players.reduce((acc, player) => ({ ...acc, [player.id]: { displayName: player.displayName, position: player.position, number: player.number } }), {}),
+  );
 
-export function AdminMatchesPage(){const [status,setStatus]=useState('all'); return <PageContainer title="Admin Matches" action={<Button>Create match</Button>}><Select value={status} onChange={(e)=>setStatus(e.target.value)}><option value='all'>All statuses</option><option value='upcoming'>Upcoming</option><option value='live'>Live</option><option value='finished'>Finished</option></Select><div className="mt-3 space-y-2">{matches.filter((m)=>status==='all'||m.status===status).map((m)=><div key={m.id} className="card flex items-center justify-between p-3"><p>R{m.round}: {teams.find((t)=>t.id===m.homeTeamId)?.shortName} vs {teams.find((t)=>t.id===m.awayTeamId)?.shortName}</p><Link className="btn btn-primary" to={`/admin/matches/${m.id}/result`}>Result editor</Link></div>)}</div></PageContainer>}
+  const changedPlayers = useMemo(() => teamPlayers.filter((p) => {
+    const draft = playerDraft[p.id];
+    return draft.displayName !== p.displayName || draft.number !== p.number || draft.position !== p.position;
+  }).length, [playerDraft, teamPlayers]);
 
-export function AdminMatchResultEditorPage(){const {id=''}=useParams(); const match=matches.find((m)=>m.id===id); if(!match) return <PageContainer title='Result editor'><EmptyState title='No match' description='Unknown id.'/></PageContainer>; return <PageContainer title='Match Result Editor' subtitle='Mobile-friendly event flow'><div className='card space-y-3 p-4'><div className='grid grid-cols-2 gap-2'><Input defaultValue={String(match.homeScore ?? 0)} /><Input defaultValue={String(match.awayScore ?? 0)} /></div><Select defaultValue={match.status}><option value='upcoming'>Upcoming</option><option value='live'>Live</option><option value='finished'>Finished</option></Select><SectionHeader title='Quick add event' /><div className='grid gap-2 md:grid-cols-4'><Input placeholder="minute" /><Select><option>goal</option><option>yellow_card</option><option>red_card</option><option>substitution</option></Select><Select>{teams.map((t)=><option key={t.id}>{t.shortName}</option>)}</Select><Button>Add event</Button></div><div className='sticky bottom-16 border-t pt-3 md:bottom-2'><Button>Save result</Button></div></div></PageContainer>}
+  const changedTeam = managedTeam ? teamDraft[managedTeam.id].description !== managedTeam.description || teamDraft[managedTeam.id].logoUrl !== managedTeam.logoUrl : false;
 
-export const AdminSchedulePage = () => <PageContainer title='Admin Schedule'>{scheduleEntries.map((s)=><div key={s.id} className='card mb-2 p-3'>{s.date} · {s.note}</div>)}</PageContainer>;
-export const AdminEventsPage = () => <PageContainer title='Admin Events'>{allEvents.map((e)=><div key={e.id} className='card mb-2 p-3'>{e.minute}' · {e.type} · {teams.find((t)=>t.id===e.teamId)?.shortName}</div>)}</PageContainer>;
-export const AdminUsersPage = () => <PageContainer title='Admin Users'>{adminUsers.map((u)=><div key={u.id} className='card mb-2 flex items-center justify-between p-3'><div><p>{u.name}</p><p className='text-xs text-zinc-500'>{u.email}</p></div><span className='text-xs'>{u.role}</span></div>)}</PageContainer>;
+  if (!captain || !managedTeam) {
+    return <PageContainer title="Кабинет"><EmptyState title="Доступ ограничен" description="Ваш аккаунт не привязан к команде." /></PageContainer>;
+  }
+
+  return (
+    <PageContainer title={`Кабинет · ${managedTeam.shortName}`} subtitle={`Права: только команда ${managedTeam.name} и её игроки`}>
+      <div className="card">
+        <SectionHeader title="Профиль команды" />
+        <div className="grid gap-3 md:grid-cols-[120px_1fr] md:items-start">
+          <div className="space-y-2">
+            <img src={teamDraft[managedTeam.id].logoUrl} className="h-24 w-24 rounded-xl border border-zinc-200 object-cover dark:border-zinc-700" />
+            <Input placeholder="URL PNG логотипа" value={teamDraft[managedTeam.id].logoUrl} onChange={(e) => setTeamDraft((prev) => ({ ...prev, [managedTeam.id]: { ...prev[managedTeam.id], logoUrl: e.target.value } }))} />
+            <p className="text-xs text-zinc-500 dark:text-zinc-400">В будущем: загрузка PNG на сервер, автокроп до квадрата.</p>
+          </div>
+          <div className="space-y-2">
+            <Input value={managedTeam.name} disabled />
+            <Input value={managedTeam.city} disabled />
+            <textarea className="input min-h-28" value={teamDraft[managedTeam.id].description} onChange={(e) => setTeamDraft((prev) => ({ ...prev, [managedTeam.id]: { ...prev[managedTeam.id], description: e.target.value } }))} />
+          </div>
+        </div>
+      </div>
+
+      <div className="card">
+        <SectionHeader title="Игроки команды" right={<span className="text-xs text-zinc-500">Изменено: {changedPlayers}</span>} />
+        <div className="space-y-3">
+          {teamPlayers.map((p) => (
+            <div key={p.id} className="grid gap-2 rounded-xl border border-zinc-200 p-3 md:grid-cols-[1.5fr_120px_120px] dark:border-zinc-700">
+              <Input value={playerDraft[p.id].displayName} onChange={(e) => setPlayerDraft((prev) => ({ ...prev, [p.id]: { ...prev[p.id], displayName: e.target.value } }))} />
+              <Input type="number" value={playerDraft[p.id].number} onChange={(e) => setPlayerDraft((prev) => ({ ...prev, [p.id]: { ...prev[p.id], number: Number(e.target.value) } }))} />
+              <Select value={playerDraft[p.id].position} onChange={(e) => setPlayerDraft((prev) => ({ ...prev, [p.id]: { ...prev[p.id], position: e.target.value as 'GK' | 'DF' | 'MF' | 'FW' } }))}>
+                <option value="GK">GK</option><option value="DF">DF</option><option value="MF">MF</option><option value="FW">FW</option>
+              </Select>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="sticky bottom-16 md:bottom-4">
+        <Button className="w-full">Сохранить изменения (мок)</Button>
+        <p className="mt-2 text-center text-xs text-zinc-500 dark:text-zinc-400">Изменения пока хранятся локально в браузере и не отправляются на сервер.</p>
+      </div>
+
+      <div className="card text-sm text-zinc-600 dark:text-zinc-300">
+        Изменения команды: <b>{changedTeam ? 1 : 0}</b>. Пользователь: {captain.name}.
+      </div>
+    </PageContainer>
+  );
+}

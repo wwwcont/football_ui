@@ -2,7 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { useMockAdminAuth } from '../hooks/useMockAdminAuth';
 import { AdminLayout } from '../layouts/AdminLayout';
 import { PublicLayout } from '../layouts/PublicLayout';
-import { AdminDashboardPage, AdminEventsPage, AdminLoginPage, AdminMatchResultEditorPage, AdminMatchesPage, AdminPlayersPage, AdminSchedulePage, AdminTeamsPage, AdminUsersPage } from '../pages/admin/AdminPages';
+import { AdminDashboardPage, AdminLoginPage } from '../pages/admin/AdminPages';
 import { EventsPage, HomePage, MatchDetailsPage, MatchesPage, NotFound, PlayerDetailsPage, PlayersPage, SearchPage, TablePage, TeamDetailsPage, TeamsPage } from '../pages/public/PublicPages';
 
 export function App() {
@@ -22,16 +22,9 @@ export function App() {
         <Route path="/search" element={<SearchPage />} />
       </Route>
 
-      <Route path="/admin/login" element={<AdminLoginPage onLogin={auth.login} />} />
-      <Route path="/admin" element={auth.loggedIn ? <AdminLayout onLogout={auth.logout} /> : <Navigate to="/admin/login" replace /> }>
-        <Route index element={<AdminDashboardPage />} />
-        <Route path="teams" element={<AdminTeamsPage />} />
-        <Route path="players" element={<AdminPlayersPage />} />
-        <Route path="matches" element={<AdminMatchesPage />} />
-        <Route path="matches/:id/result" element={<AdminMatchResultEditorPage />} />
-        <Route path="schedule" element={<AdminSchedulePage />} />
-        <Route path="events" element={<AdminEventsPage />} />
-        <Route path="users" element={<AdminUsersPage />} />
+      <Route path="/login" element={auth.loggedIn ? <Navigate to="/cabinet" replace /> : <AdminLoginPage onLogin={auth.login} />} />
+      <Route path="/cabinet" element={auth.loggedIn ? <AdminLayout onLogout={auth.logout} /> : <Navigate to="/login" replace />}>
+        <Route index element={<AdminDashboardPage captainId={auth.captainId || ''} />} />
       </Route>
 
       <Route path="*" element={<NotFound />} />
