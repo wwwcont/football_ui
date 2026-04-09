@@ -1,3 +1,4 @@
+import type React from 'react';
 import { Search } from 'lucide-react';
 
 export const Input = (props: React.InputHTMLAttributes<HTMLInputElement>) => <input {...props} className={`input ${props.className ?? ''}`} />;
