@@ -2,13 +2,15 @@ import { Link } from 'react-router-dom';
 import { Match, Player, Team } from '../../types/domain';
 import { StatusBadge } from '../ui/Primitives';
 
+const formatStatus = (status: string) => ({ upcoming: 'Скоро', live: 'Идет', finished: 'Завершен', postponed: 'Перенесен', cancelled: 'Отменен' }[status] ?? status);
+
 export function TeamCard({ team }: { team: Team }) {
   return (
     <Link to={`/teams/${team.id}`} className="card flex items-center gap-3">
-      <img src={team.logoUrl} className="h-12 w-12 rounded-lg border border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800" />
+      <img src={team.logoUrl} className="h-12 w-12 rounded-lg border border-zinc-200 bg-zinc-50 object-cover dark:border-zinc-700 dark:bg-zinc-800" />
       <div className="min-w-0">
         <p className="truncate font-medium">{team.name}</p>
-        <p className="text-xs text-zinc-500 dark:text-zinc-400">{team.city} · {team.stats.points} pts</p>
+        <p className="text-xs text-zinc-500 dark:text-zinc-400">{team.city} · {team.stats.points} очк.</p>
       </div>
     </Link>
   );
@@ -30,8 +32,8 @@ export function MatchCard({ match, home, away }: { match: Match; home: Team; awa
   return (
     <Link to={`/matches/${match.id}`} className="card block">
       <div className="mb-3 flex items-center justify-between gap-2 text-xs text-zinc-500 dark:text-zinc-400">
-        <span>Round {match.round}</span>
-        <StatusBadge label={match.status} />
+        <span>Тур {match.round}</span>
+        <StatusBadge label={formatStatus(match.status)} />
       </div>
       <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
         <p className="truncate">{home.shortName}</p>

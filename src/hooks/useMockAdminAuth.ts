@@ -1,20 +1,21 @@
 import { useMemo, useState } from 'react';
 
 export function useMockAdminAuth() {
-  const [loggedIn, setLoggedIn] = useState(() => localStorage.getItem('adminSession') === '1');
+  const [captainId, setCaptainId] = useState(() => localStorage.getItem('captainSession'));
   const value = useMemo(
     () => ({
-      loggedIn,
-      login: () => {
-        localStorage.setItem('adminSession', '1');
-        setLoggedIn(true);
+      loggedIn: Boolean(captainId),
+      captainId,
+      login: (id: string) => {
+        localStorage.setItem('captainSession', id);
+        setCaptainId(id);
       },
       logout: () => {
-        localStorage.removeItem('adminSession');
-        setLoggedIn(false);
+        localStorage.removeItem('captainSession');
+        setCaptainId(null);
       },
     }),
-    [loggedIn],
+    [captainId],
   );
 
   return value;
