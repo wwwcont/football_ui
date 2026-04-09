@@ -30,13 +30,13 @@ export function PublicShell() {
 
   return (
     <div className="min-h-screen bg-black text-zinc-100">
-      <header className="sticky top-0 z-20 bg-black">
+      <header className="sticky top-0 z-20 border-b line-accent bg-[#121212]/95 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4">
           <div className="flex items-center gap-3">
             {!isHome ? (
               <button
                 onClick={handleBack}
-                className="inline-flex h-10 items-center rounded-xl bg-zinc-900 px-3 text-sm font-medium text-zinc-100 md:h-9"
+                className="panel-soft inline-flex h-10 items-center rounded-xl px-3 text-sm font-medium text-zinc-100 md:h-9"
                 type="button"
               >
                 ← Назад
@@ -68,9 +68,7 @@ export function PublicShell() {
             ))}
             <NavLink
               to={profileItem.to}
-              className={({ isActive }) =>
-                cn('rounded-lg bg-zinc-900 px-3 py-2 text-xs uppercase', isActive ? 'text-zinc-100' : 'text-zinc-300')
-              }
+              className={({ isActive }) => cn('rounded-lg px-3 py-2 text-xs uppercase', isActive ? 'text-[#d8bd75]' : 'text-zinc-300')}
             >
               {profileItem.label}
             </NavLink>
@@ -82,7 +80,7 @@ export function PublicShell() {
         <Outlet />
       </main>
 
-      <nav className="fixed inset-x-0 bottom-0 z-20 bg-black pb-[max(env(safe-area-inset-bottom),0px)] md:hidden">
+      <nav className="fixed inset-x-0 bottom-0 z-20 border-t line-accent bg-[#111]/95 pb-[max(env(safe-area-inset-bottom),0px)] md:hidden">
         <div className="grid grid-cols-5 px-2 py-2">
           {[...primaryNavItems, profileItem].map((item) => (
             <NavLink
@@ -91,7 +89,7 @@ export function PublicShell() {
               className={({ isActive }) =>
                 cn(
                   'rounded-xl px-2 py-3.5 text-center text-xs font-medium uppercase transition-colors',
-                  isActive ? 'bg-zinc-800 text-zinc-100' : 'text-zinc-400',
+                  isActive ? 'text-[#d8bd75]' : 'text-zinc-400',
                 )
               }
             >

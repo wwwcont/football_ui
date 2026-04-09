@@ -1,4 +1,4 @@
-export const APP_LOGO_URL = '/src/logo.jpg';
+export const APP_LOGO_URL = '/icons/tournament-logo.svg';
 export const FALLBACK_LOGO_URL = '/icons/tournament-logo.svg';
 
 export function resolveLogo(url?: string | null) {
