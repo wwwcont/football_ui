@@ -1,4 +1,5 @@
 import { Link, useParams } from 'react-router-dom';
+import { TeamLogo } from '../../components/public/TeamLogo';
 import { EmptyState, ErrorState, LoadingState } from '../../components/ui/PageState';
 import { usePlayers } from '../../hooks/usePlayers';
 import { useTeam } from '../../hooks/useTeam';
@@ -18,7 +19,7 @@ export function TeamDetailsPage() {
     <div className="space-y-4">
       <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-4">
         <div className="flex items-center gap-3">
-          <img src={team.data.logoUrl} alt={team.data.name} className="h-12 w-12 rounded-full border border-zinc-700" />
+          <TeamLogo team={team.data} className="h-12 w-12 rounded-full border border-zinc-700 object-cover" />
           <div>
             <h1 className="text-lg font-semibold">{team.data.name}</h1>
             <p className="text-sm text-zinc-400">{team.data.city} · Тренер {team.data.coach}</p>
