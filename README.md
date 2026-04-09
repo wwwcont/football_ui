@@ -2,6 +2,25 @@
 
 Minimal black-and-white mobile-first skeleton for a football tournament tracker.
 
+## Important: how to open locally
+Do **not** open `index.html` directly from the file system (`file://...`) — Vite/React app needs a local web server.
+
+Use:
+
+```bash
+npm install
+npm run dev
+```
+
+Then open the localhost URL from terminal (usually `http://localhost:5173`).
+
+Production preview:
+
+```bash
+npm run build
+npm run preview
+```
+
 ## Stack
 - React + TypeScript + Vite
 - Tailwind CSS
@@ -15,14 +34,6 @@ Minimal black-and-white mobile-first skeleton for a football tournament tracker.
 - Reusable UI primitives and cards.
 - Mock data/types for teams, players, matches, events, standings, schedule, seasons, admins.
 - PWA base: `manifest.json`, iOS meta tags, placeholder icons.
-
-## Run
-```bash
-npm install
-npm run dev
-```
-
-Then open printed local URL (usually `http://localhost:5173`).
 
 ## Notes
 - No backend/API integration.
