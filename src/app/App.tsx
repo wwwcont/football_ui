@@ -24,7 +24,7 @@ export function App() {
 
       <Route path="/login" element={auth.loggedIn ? <Navigate to="/cabinet" replace /> : <AdminLoginPage onLogin={auth.login} />} />
       <Route path="/cabinet" element={auth.loggedIn ? <AdminLayout onLogout={auth.logout} /> : <Navigate to="/login" replace />}>
-        <Route index element={<AdminDashboardPage captainId={auth.captainId || ''} />} />
+        <Route index element={auth.session ? <AdminDashboardPage session={auth.session} /> : null} />
       </Route>
 
       <Route path="*" element={<NotFound />} />

@@ -1,4 +1,4 @@
-import { BarChart3, Calendar, Home, Menu, Moon, Search, Sun } from 'lucide-react';
+import { BarChart3, Calendar, Home, LogIn, Moon, Search, Sun, UserRound } from 'lucide-react';
 import { Link, NavLink } from 'react-router-dom';
 import { useTheme } from '../../app/ThemeProvider';
 
@@ -11,23 +11,26 @@ function ThemeSwitch() {
   );
 }
 
+const hasSession = () => Boolean(localStorage.getItem('leagueSession'));
+
 export function BottomNav() {
+  const inCabinet = hasSession();
   const items = [
     { to: '/', label: 'Главная', icon: Home },
     { to: '/table', label: 'Таблица', icon: BarChart3 },
     { to: '/matches', label: 'Матчи', icon: Calendar },
     { to: '/search', label: 'Поиск', icon: Search },
-    { to: '/teams', label: 'Меню', icon: Menu },
+    { to: inCabinet ? '/cabinet' : '/login', label: inCabinet ? 'Кабинет' : 'Вход', icon: inCabinet ? UserRound : LogIn },
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-20 border-t border-zinc-200 bg-white/95 backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/95 md:hidden">
+    <nav className="fixed bottom-0 left-0 right-0 z-20 border-t border-zinc-700 bg-black/95 backdrop-blur md:hidden">
       <div className="grid grid-cols-5">
         {items.map((item) => (
           <NavLink
             key={item.to}
             to={item.to}
-            className="flex min-h-14 flex-col items-center justify-center gap-1 text-xs text-zinc-500 transition-colors [&.active]:text-zinc-900 dark:text-zinc-400 dark:[&.active]:text-zinc-100"
+            className="flex min-h-14 flex-col items-center justify-center gap-1 text-xs text-zinc-400 transition-colors [&.active]:text-zinc-100"
           >
             <item.icon className="h-4 w-4" />
             {item.label}
@@ -39,17 +42,21 @@ export function BottomNav() {
 }
 
 export function DesktopTopbar() {
+  const inCabinet = hasSession();
+
   return (
-    <header className="sticky top-0 z-10 hidden border-b border-zinc-200 bg-white/90 backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/85 md:block">
+    <header className="sticky top-0 z-10 hidden border-b border-zinc-800 bg-black/95 backdrop-blur md:block">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 p-4">
-        <Link to="/" className="font-semibold">Трекер футбольного турнира</Link>
-        <div className="flex items-center gap-4 text-sm text-zinc-600 dark:text-zinc-300">
+        <Link to="/" className="flex items-center gap-3 text-zinc-100">
+          <img src="/icons/tournament-logo.svg" className="h-9 w-9 object-contain" />
+          <span className="font-semibold">United Football League</span>
+        </Link>
+        <div className="flex items-center gap-4 text-sm text-zinc-300">
           <Link to="/table">Таблица</Link>
           <Link to="/matches">Матчи</Link>
           <Link to="/teams">Команды</Link>
           <Link to="/players">Игроки</Link>
-          <Link to="/events">События</Link>
-          <Link to="/login">Вход</Link>
+          <Link to={inCabinet ? '/cabinet' : '/login'}>{inCabinet ? 'Личный кабинет' : 'Вход'}</Link>
           <ThemeSwitch />
         </div>
       </div>

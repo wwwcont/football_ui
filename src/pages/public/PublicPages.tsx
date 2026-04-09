@@ -18,12 +18,14 @@ const recentMatchesForTeam = (teamId: string, currentMatchId: string) =>
 
 export function HomePage() {
   return (
-    <PageContainer title="Турнирная панель" subtitle="MVP-версия с моковыми данными">
+    <PageContainer title="United Football League" subtitle="Официальная панель турнира">
+      <section className="rounded-2xl border border-zinc-800 bg-black px-4 py-6 text-center">
+        <img src="/icons/tournament-logo.svg" className="mx-auto h-28 w-auto object-contain md:h-36" />
+      </section>
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         <StatCard label="Команд" value={teams.length} />
         <StatCard label="Игроков" value={players.length} />
         <StatCard label="Матчей" value={matches.length} />
-        <StatCard label="Событий" value={allEvents.length} />
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
@@ -52,16 +54,16 @@ export function TablePage() {
       title="Турнирная таблица"
       action={<Select value={group} onChange={(e) => setGroup(e.target.value)}><option value="all">Все группы</option><option value="A">Группа A</option><option value="B">Группа B</option></Select>}
     >
-      <div className="card overflow-hidden border-zinc-800 bg-[#001745] p-0 text-white">
+      <div className="card overflow-hidden border-zinc-800 bg-zinc-900 p-0 text-zinc-100">
         <table className="w-full text-sm">
-          <thead className="bg-[#00225f] text-zinc-100">
+          <thead className="bg-zinc-800 text-zinc-100">
             <tr>{['#', 'Команда', 'И', 'В-Н-П', 'ЗП', 'О'].map((h) => <th key={h} className="px-2 py-3 text-left md:px-3">{h}</th>)}</tr>
           </thead>
           <tbody>
             {rows.map((r) => {
               const team = teamById(r.teamId);
               return (
-                <tr key={r.teamId} className="border-t border-blue-950/80">
+                <tr key={r.teamId} className="border-t border-zinc-700/90">
                   <td className="px-2 py-3 md:px-3">{r.position}</td>
                   <td className="px-2 py-3 md:px-3">
                     <div className="flex items-center gap-2">
@@ -104,8 +106,8 @@ export function MatchDetailsPage() {
 
   return (
     <PageContainer title="Превью матча" subtitle="Инфо, форма команд и судейская бригада">
-      <section className="overflow-hidden rounded-2xl border border-blue-900 bg-gradient-to-b from-[#12357f] to-[#0b1f57] text-white shadow-soft">
-        <div className="flex items-center justify-center gap-3 border-b border-blue-400/30 px-4 py-3 text-sm md:text-base">
+      <section className="overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900 text-zinc-100 shadow-soft">
+        <div className="flex items-center justify-center gap-3 border-b border-zinc-700 px-4 py-3 text-sm md:text-base">
           <CalendarDays className="h-4 w-4" />
           <span>{formatDate(match.date)}</span>
           <span className="opacity-80">|</span>
@@ -124,7 +126,7 @@ export function MatchDetailsPage() {
           </div>
         </div>
 
-        <div className="flex items-center justify-center gap-2 border-t border-blue-400/30 px-4 py-4 text-lg font-medium">
+        <div className="flex items-center justify-center gap-2 border-t border-zinc-700 px-4 py-4 text-lg font-medium">
           <MapPin className="h-5 w-5" />
           {match.venue}
         </div>
@@ -162,10 +164,6 @@ export function MatchDetailsPage() {
         </section>
       </div>
 
-      <section>
-        <SectionHeader title="События матча" />
-        {match.events.length ? <div className="space-y-2">{match.events.map((e) => <div key={e.id} className="card text-sm">{e.minute}' · {formatEventType(e.type)} · {playerById(e.playerId || '')?.displayName ?? 'Командное событие'}</div>)}</div> : <EmptyState title="Пока без событий" description="События появятся во время матча." />}
-      </section>
     </PageContainer>
   );
 }
