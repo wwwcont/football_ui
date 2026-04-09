@@ -29,7 +29,7 @@ export function PublicShell() {
   };
 
   return (
-    <div className="min-h-screen text-zinc-100">
+    <div className="min-h-screen bg-black text-zinc-100">
       <header className="sticky top-0 z-20 border-b line-accent bg-[#121212]/95 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4">
           <div className="flex items-center gap-3">
@@ -68,9 +68,7 @@ export function PublicShell() {
             ))}
             <NavLink
               to={profileItem.to}
-              className={({ isActive }) =>
-                cn('panel-soft rounded-lg px-3 py-2 text-xs uppercase', isActive ? 'text-zinc-100' : 'text-zinc-300')
-              }
+              className={({ isActive }) => cn('rounded-lg px-3 py-2 text-xs uppercase', isActive ? 'text-[#d8bd75]' : 'text-zinc-300')}
             >
               {profileItem.label}
             </NavLink>
@@ -91,7 +89,7 @@ export function PublicShell() {
               className={({ isActive }) =>
                 cn(
                   'rounded-xl px-2 py-3.5 text-center text-xs font-medium uppercase transition-colors',
-                  isActive ? 'panel-matte text-zinc-100' : 'text-zinc-400',
+                  isActive ? 'text-[#d8bd75]' : 'text-zinc-400',
                 )
               }
             >

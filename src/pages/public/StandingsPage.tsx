@@ -4,6 +4,7 @@ import { ErrorState, LoadingState } from '../../components/ui/PageState';
 import { useStandings } from '../../hooks/useStandings';
 import { useTeams } from '../../hooks/useTeams';
 import { getStandingsViewSettings, type StandingsViewMode } from '../../lib/standingsViewSettings';
+import type { Team } from '../../domain/models';
 
 function GoalLine({ gf, ga, gd }: { gf: number; ga: number; gd: number }) {
   const diff = gd > 0 ? `+${gd}` : `${gd}`;
@@ -28,6 +29,7 @@ export function StandingsPage() {
     row,
     team: teams.data.find((item) => item.id === row.teamId),
   }));
+  const bracketRounds = buildBracketRounds(rows.map((item) => item.team).filter(Boolean) as Team[]);
 
   return (
     <section className="space-y-3">
@@ -74,25 +76,105 @@ export function StandingsPage() {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
-          {rows.map(({ row, team }) => (
-            <article key={row.teamId} className="panel-matte rounded-xl p-3">
-              <div className="flex items-center gap-2">
-                <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border line-accent text-xs tabular-nums text-zinc-200">
-                  {row.position}
-                </span>
-                <TeamLogo team={team} className="h-7 w-7 rounded-full object-cover" />
-                <p className="truncate text-sm font-medium text-zinc-100">{team?.name}</p>
+        <div className="panel-matte rounded-xl p-3">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-stretch">
+            {bracketRounds.map((round, roundIndex) => (
+              <div key={round.title} className="relative flex-1">
+                <p className="mb-2 text-center text-[11px] uppercase tracking-wide text-[#d8bd75]">{round.title}</p>
+                <div className="space-y-3">
+                  {round.matches.map((match, matchIndex) => (
+                    <BracketMatchCard
+                      key={`${round.title}-${matchIndex}`}
+                      match={match}
+                      isLastRound={roundIndex === bracketRounds.length - 1}
+                    />
+                  ))}
+                </div>
               </div>
-              <div className="mt-2 text-xs text-zinc-400">
-                <p>{row.won}-{row.drawn}-{row.lost}</p>
-                <p className="tabular-nums">Очки: <span className="text-zinc-100">{row.points}</span></p>
-              </div>
-            </article>
-          ))}
+            ))}
+          </div>
         </div>
       )}
     </section>
+  );
+}
+
+type BracketSlot = {
+  team?: Team;
+  placeholder?: '?' | 'BYE';
+};
+
+type BracketMatch = {
+  home: BracketSlot;
+  away: BracketSlot;
+};
+
+function buildBracketRounds(sortedTeams: Team[]) {
+  const teams: Array<Team | undefined> = [...sortedTeams];
+  if (teams.length % 2 !== 0) {
+    teams.push(undefined);
+  }
+
+  const rounds: Array<{ title: string; matches: BracketMatch[] }> = [];
+  const firstRound: BracketMatch[] = [];
+
+  for (let index = 0; index < teams.length; index += 2) {
+    firstRound.push({
+      home: teams[index] ? { team: teams[index] } : { placeholder: '?' },
+      away: teams[index + 1] ? { team: teams[index + 1] } : { placeholder: '?' },
+    });
+  }
+
+  rounds.push({ title: 'Раунд 1', matches: firstRound });
+
+  let matchesInRound = firstRound.length;
+  while (matchesInRound > 1) {
+    matchesInRound = Math.ceil(matchesInRound / 2);
+    rounds.push({
+      title: matchesInRound === 1 ? 'Финал' : matchesInRound === 2 ? '1/2 финала' : '1/4 финала',
+      matches: Array.from({ length: matchesInRound }, () => ({
+        home: { placeholder: '?' },
+        away: { placeholder: '?' },
+      })),
+    });
+  }
+
+  return rounds;
+}
+
+function BracketMatchCard({ match, isLastRound }: { match: BracketMatch; isLastRound: boolean }) {
+  return (
+    <article className="relative rounded-lg border line-accent px-2 py-2">
+      <div className="space-y-1.5">
+        <TeamSlot slot={match.home} />
+        <TeamSlot slot={match.away} />
+      </div>
+
+      {!isLastRound ? (
+        <>
+          <span className="absolute -bottom-3 left-1/2 h-3 w-px -translate-x-1/2 bg-[#8f7a3f] lg:hidden" />
+          <span className="absolute -right-3 top-1/2 hidden h-px w-3 -translate-y-1/2 bg-[#8f7a3f] lg:block" />
+        </>
+      ) : null}
+    </article>
+  );
+}
+
+function TeamSlot({ slot }: { slot: BracketSlot }) {
+  if (!slot.team) {
+    return (
+      <div className="flex h-8 items-center justify-between rounded-md border border-dashed line-accent px-2">
+        <span className="text-xs text-zinc-400">Не определена</span>
+        <span className="text-sm font-semibold text-[#d8bd75]">{slot.placeholder ?? '?'}</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex h-8 items-center gap-2 rounded-md border line-accent px-2">
+      <TeamLogo team={slot.team} className="h-4 w-4 rounded-full object-cover" />
+      <p className="truncate text-xs text-zinc-100">{slot.team.shortName || slot.team.name}</p>
+    </div>
   );
 }
 

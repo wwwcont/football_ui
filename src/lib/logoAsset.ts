@@ -1,6 +1,4 @@
-import { appLogoDataUrl } from '../logo';
-
-export const APP_LOGO_URL = appLogoDataUrl;
+export const APP_LOGO_URL = '/icons/tournament-logo.svg';
 export const FALLBACK_LOGO_URL = '/icons/tournament-logo.svg';
 
 export function resolveLogo(url?: string | null) {
