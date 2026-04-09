@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { Team } from '../../domain/models';
-import { TOURNAMENT_LOGO_URL, getTeamLogo } from '../../lib/teamLogo';
+import { getTeamLogo } from '../../lib/teamLogo';
 import { FALLBACK_LOGO_URL } from '../../lib/logoAsset';
 
 interface TeamLogoProps {
@@ -20,7 +20,11 @@ export function TeamLogo({ team, className }: TeamLogoProps) {
       src={src}
       alt={team?.name ?? 'Команда'}
       className={className}
-      onError={() => setSrc(src === TOURNAMENT_LOGO_URL ? FALLBACK_LOGO_URL : TOURNAMENT_LOGO_URL)}
+      onError={() => {
+        if (src !== FALLBACK_LOGO_URL) {
+          setSrc(FALLBACK_LOGO_URL);
+        }
+      }}
     />
   );
 }

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { TeamLogo } from '../../components/public/TeamLogo';
 import { ErrorState, LoadingState } from '../../components/ui/PageState';
 import { useStandings } from '../../hooks/useStandings';
@@ -20,7 +20,6 @@ export function StandingsPage() {
   const standings = useStandings();
   const teams = useTeams();
   const [viewMode, setViewMode] = useState<StandingsViewMode>(() => getStandingsViewSettings().defaultView);
-  const settings = useMemo(() => getStandingsViewSettings(), []);
 
   if (standings.isLoading || teams.isLoading) return <LoadingState />;
   if (standings.error || teams.error) return <ErrorState message={standings.error ?? teams.error ?? undefined} />;
@@ -30,20 +29,18 @@ export function StandingsPage() {
     team: teams.data.find((item) => item.id === row.teamId),
   }));
 
-  const gridRowCount = Math.ceil(rows.length / settings.gridColumns);
-
   return (
     <section className="space-y-3">
-      <div className="flex items-center justify-between rounded-xl bg-zinc-900 p-2">
+      <div className="panel-matte flex items-center justify-between rounded-xl p-2">
         <p className="px-2 text-xs text-zinc-400">Режим отображения</p>
-        <div className="flex rounded-lg bg-black/25 p-1">
+        <div className="panel-soft flex rounded-lg p-1">
           <ViewButton current={viewMode} target="table" onClick={setViewMode} label="Таблица" />
           <ViewButton current={viewMode} target="grid" onClick={setViewMode} label="Сетка" />
         </div>
       </div>
 
       {viewMode === 'table' ? (
-        <div className="overflow-hidden rounded-xl bg-zinc-900">
+        <div className="panel-matte overflow-hidden rounded-xl">
           <div className="overflow-x-auto">
             <table className="min-w-full text-xs sm:text-sm">
               <thead className="text-zinc-400">
@@ -77,18 +74,11 @@ export function StandingsPage() {
           </div>
         </div>
       ) : (
-        <div
-          className="grid gap-2"
-          style={{
-            gridAutoFlow: 'column',
-            gridTemplateRows: `repeat(${gridRowCount}, minmax(0, 1fr))`,
-            gridTemplateColumns: `repeat(${settings.gridColumns}, minmax(0, 1fr))`,
-          }}
-        >
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
           {rows.map(({ row, team }) => (
-            <article key={row.teamId} className="rounded-xl bg-zinc-900 p-3">
+            <article key={row.teamId} className="panel-matte rounded-xl p-3">
               <div className="flex items-center gap-2">
-                <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-zinc-800 text-xs tabular-nums text-zinc-200">
+                <span className="inline-flex h-6 w-6 items-center justify-center rounded-full border line-accent text-xs tabular-nums text-zinc-200">
                   {row.position}
                 </span>
                 <TeamLogo team={team} className="h-7 w-7 rounded-full object-cover" />
@@ -120,7 +110,7 @@ function ViewButton({
   return (
     <button
       type="button"
-      className={current === target ? 'rounded-md bg-zinc-800 px-3 py-1.5 text-xs text-zinc-100' : 'rounded-md px-3 py-1.5 text-xs text-zinc-400'}
+      className={current === target ? 'panel-matte rounded-md px-3 py-1.5 text-xs text-zinc-100' : 'rounded-md px-3 py-1.5 text-xs text-zinc-400'}
       onClick={() => onClick(target)}
     >
       {label}
