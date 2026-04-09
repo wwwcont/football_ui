@@ -1,12 +1,12 @@
 import type { ReactNode } from 'react';
 
 export function LoadingState({ label = 'Загрузка...' }: { label?: string }) {
-  return <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-6 text-sm text-zinc-400">{label}</div>;
+  return <div className="rounded-xl bg-zinc-900 p-6 text-sm text-zinc-400">{label}</div>;
 }
 
 export function EmptyState({ title, hint, action }: { title: string; hint?: string; action?: ReactNode }) {
   return (
-    <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-6 text-center">
+    <div className="rounded-xl bg-zinc-900 p-6 text-center">
       <p className="text-sm font-semibold text-zinc-100">{title}</p>
       {hint ? <p className="mt-1 text-sm text-zinc-400">{hint}</p> : null}
       {action ? <div className="mt-4">{action}</div> : null}
@@ -16,7 +16,7 @@ export function EmptyState({ title, hint, action }: { title: string; hint?: stri
 
 export function ErrorState({ message, onRetry }: { message?: string; onRetry?: () => void }) {
   return (
-    <div className="rounded-xl border border-zinc-700 bg-zinc-900 p-6">
+    <div className="rounded-xl bg-zinc-900 p-6">
       <p className="text-sm font-semibold text-zinc-100">Ошибка загрузки</p>
       <p className="mt-1 text-sm text-zinc-400">{message ?? 'Попробуйте повторить запрос.'}</p>
       {onRetry ? (
@@ -30,7 +30,7 @@ export function ErrorState({ message, onRetry }: { message?: string; onRetry?: (
 
 export function ForbiddenState() {
   return (
-    <div className="rounded-xl border border-zinc-700 bg-zinc-900 p-6 text-center">
+    <div className="rounded-xl bg-zinc-900 p-6 text-center">
       <p className="text-sm font-semibold text-zinc-100">403 — Нет доступа</p>
       <p className="mt-1 text-sm text-zinc-400">У вас недостаточно прав для этой страницы.</p>
     </div>

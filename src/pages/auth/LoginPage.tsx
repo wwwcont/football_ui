@@ -6,7 +6,7 @@ import { useAdminSession } from '../../hooks/useAdminSession';
 type FormValues = { name: string; role: AdminRole };
 
 export function LoginPage() {
-  const { register, handleSubmit } = useForm<FormValues>({ defaultValues: { name: 'Оператор', role: 'match_operator' } });
+  const { register, handleSubmit } = useForm<FormValues>({ defaultValues: { name: 'Администратор', role: 'super_admin' } });
   const { login } = useAdminSession();
   const [params] = useSearchParams();
   const navigate = useNavigate();
@@ -20,7 +20,7 @@ export function LoginPage() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 rounded-2xl border border-zinc-800 bg-zinc-900 p-5">
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 rounded-2xl bg-zinc-900 p-5">
       <div>
         <h1 className="text-xl font-semibold text-zinc-100">{isAdminLoginRoute ? 'Вход в админ-панель' : 'Вход в аккаунт'}</h1>
         <p className="text-sm text-zinc-400">
@@ -31,11 +31,11 @@ export function LoginPage() {
       </div>
       <label className="block space-y-1 text-sm">
         <span className="text-zinc-300">Имя</span>
-        <input {...register('name', { required: true })} className="h-11 w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3" />
+        <input {...register('name', { required: true })} className="h-11 w-full rounded-lg bg-zinc-800 px-3" />
       </label>
       <label className="block space-y-1 text-sm">
         <span className="text-zinc-300">Роль</span>
-        <select {...register('role')} className="h-11 w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3">
+        <select {...register('role')} className="h-11 w-full rounded-lg bg-zinc-800 px-3">
           <option value="match_operator">Оператор матча</option>
           <option value="league_admin">Админ лиги</option>
           <option value="super_admin">Супер-админ</option>
