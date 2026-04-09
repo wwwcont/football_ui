@@ -9,9 +9,9 @@ export const statusLabel: Record<MatchStatus, string> = {
 };
 
 export const statusTone: Record<MatchStatus, string> = {
-  scheduled: 'border border-zinc-600 text-zinc-300',
-  live: 'bg-white text-zinc-900',
-  finished: 'bg-zinc-800 text-zinc-200',
+  scheduled: 'border border-zinc-600/80 bg-zinc-900/80 text-zinc-300',
+  live: 'border border-[#a23a50]/60 bg-[#7c2233]/35 text-rose-100',
+  finished: 'border border-zinc-600/70 bg-zinc-800/70 text-zinc-100',
   postponed: 'border border-dashed border-zinc-500 text-zinc-300',
   canceled: 'border border-zinc-500 text-zinc-400',
 };

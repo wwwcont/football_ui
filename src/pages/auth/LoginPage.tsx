@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import type { AdminRole } from '../../domain/models';
 import { useAdminSession } from '../../hooks/useAdminSession';
+import { APP_LOGO_URL } from '../../lib/logoAsset';
 
 type FormValues = { name: string; role: AdminRole };
 
@@ -16,32 +17,39 @@ export function LoginPage() {
 
   const onSubmit = ({ name, role }: FormValues) => {
     login(name, role);
-    navigate(params.get('next') || '/admin', { replace: true });
+    const defaultPath = isAdminLoginRoute ? '/admin' : '/cabinet';
+    navigate(params.get('next') || defaultPath, { replace: true });
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 rounded-2xl bg-zinc-900 p-5">
-      <div>
-        <h1 className="text-xl font-semibold text-zinc-100">{isAdminLoginRoute ? 'Вход в админ-панель' : 'Вход в аккаунт'}</h1>
-        <p className="text-sm text-zinc-400">
-          {isAdminLoginRoute
-            ? 'Демо-авторизация для админского режима'
-            : 'Войдите, чтобы перейти в кабинет и управлять данными турнира'}
-        </p>
+    <form onSubmit={handleSubmit(onSubmit)} className="panel-matte space-y-4 rounded-3xl p-5">
+      <div className="flex items-start gap-3">
+        <span className="logo-shell h-12 w-12 rounded-xl">
+          <img src={APP_LOGO_URL} alt="Tournament" className="h-full w-full rounded-xl p-1.5" />
+        </span>
+        <div>
+          <h1 className="text-xl font-semibold text-zinc-100">{isAdminLoginRoute ? 'Вход в админ-панель' : 'Вход в аккаунт'}</h1>
+          <p className="mt-1 text-sm text-zinc-400">
+            {isAdminLoginRoute
+              ? 'Демо-авторизация для админского режима'
+              : 'Войдите, чтобы открыть кабинет и сохранить сессию во всех public разделах'}
+          </p>
+        </div>
       </div>
+
       <label className="block space-y-1 text-sm">
         <span className="text-zinc-300">Имя</span>
-        <input {...register('name', { required: true })} className="h-11 w-full rounded-lg bg-zinc-800 px-3" />
+        <input {...register('name', { required: true })} className="panel-soft h-11 w-full rounded-xl px-3 text-zinc-100 focus:border-[#a23a50]/50 focus:outline-none" />
       </label>
       <label className="block space-y-1 text-sm">
         <span className="text-zinc-300">Роль</span>
-        <select {...register('role')} className="h-11 w-full rounded-lg bg-zinc-800 px-3">
+        <select {...register('role')} className="panel-soft h-11 w-full rounded-xl px-3 text-zinc-100 focus:border-[#a23a50]/50 focus:outline-none">
           <option value="match_operator">Оператор матча</option>
           <option value="league_admin">Админ лиги</option>
           <option value="super_admin">Супер-админ</option>
         </select>
       </label>
-      <button className="h-11 w-full rounded-lg bg-[#6d2432] text-sm font-medium text-rose-50" type="submit">Войти</button>
+      <button className="accent-badge h-11 w-full rounded-xl text-sm font-semibold" type="submit">Войти</button>
     </form>
   );
 }

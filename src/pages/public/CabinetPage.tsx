@@ -13,8 +13,8 @@ export function CabinetPage() {
 
   return (
     <div className="space-y-4">
-      <section className="rounded-2xl bg-zinc-900 p-4">
-        <p className="text-xs text-zinc-400">Личный кабинет</p>
+      <section className="panel-matte rounded-2xl p-4">
+        <p className="text-xs uppercase tracking-[0.11em] text-zinc-500">Личный кабинет</p>
         <h1 className="mt-1 text-lg font-semibold">{session?.name ?? 'Пользователь'}</h1>
         <p className="text-sm text-zinc-400">Роль: {session?.role ?? 'guest'}</p>
       </section>
@@ -25,21 +25,21 @@ export function CabinetPage() {
             key={tab.to}
             to={tab.to}
             end={tab.to === '/cabinet'}
-            className={({ isActive }) => cn('rounded-xl px-3 py-2 text-sm', isActive ? 'bg-[#4f1824] text-rose-100' : 'bg-zinc-900 text-zinc-300')}
+            className={({ isActive }) => cn('rounded-xl px-3 py-2 text-sm', isActive ? 'accent-badge' : 'panel-soft text-zinc-300')}
           >
             {tab.label}
           </NavLink>
         ))}
       </nav>
 
-      <div className="rounded-2xl bg-zinc-900 p-4">
+      <div className="panel-matte rounded-2xl p-4">
         <Outlet />
       </div>
 
       <div className="grid gap-2 md:grid-cols-2">
-        <Link to="/admin" className="rounded-xl bg-zinc-900 px-4 py-3 text-sm">Открыть расширенную админ-панель</Link>
+        <Link to="/admin" className="panel-soft rounded-xl px-4 py-3 text-sm">Открыть расширенную админ-панель</Link>
         <button
-          className="rounded-xl bg-[#6d2432] px-4 py-3 text-sm text-rose-100"
+          className="accent-badge rounded-xl px-4 py-3 text-sm"
           onClick={() => {
             logout();
             navigate('/auth/login', { replace: true });

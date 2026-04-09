@@ -32,20 +32,20 @@ export function StandingsPage() {
   const bracketRounds = buildBracketRounds(rows.map((item) => item.team).filter(Boolean) as Team[]);
 
   return (
-    <section className="space-y-3">
-      <div className="panel-matte flex items-center justify-between rounded-xl p-2">
-        <p className="px-2 text-xs text-zinc-400">Режим отображения</p>
-        <div className="panel-soft flex rounded-lg p-1">
+    <section className="space-y-4">
+      <div className="panel-matte flex items-center justify-between rounded-2xl p-2.5">
+        <p className="px-2 text-[11px] uppercase tracking-[0.12em] text-zinc-500">Режим отображения</p>
+        <div className="panel-soft flex rounded-xl p-1">
           <ViewButton current={viewMode} target="table" onClick={setViewMode} label="Таблица" />
           <ViewButton current={viewMode} target="grid" onClick={setViewMode} label="Сетка" />
         </div>
       </div>
 
       {viewMode === 'table' ? (
-        <div className="panel-matte overflow-hidden rounded-xl">
+        <div className="panel-matte overflow-hidden rounded-2xl">
           <div className="overflow-x-auto">
             <table className="min-w-full text-xs sm:text-sm">
-              <thead className="text-zinc-400">
+              <thead className="border-b line-accent text-zinc-400">
                 <tr>
                   <th className="px-2 py-2 text-left font-medium">#</th>
                   <th className="px-2 py-2 text-left font-medium">Команда</th>
@@ -55,20 +55,22 @@ export function StandingsPage() {
                   <th className="px-2 py-2 text-right font-medium">О</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-zinc-800/65">
                 {rows.map(({ row, team }) => (
-                  <tr key={row.teamId}>
-                    <td className="px-2 py-2 tabular-nums text-zinc-300">{row.position}</td>
-                    <td className="px-2 py-2">
+                  <tr key={row.teamId} className={row.position <= 3 ? 'bg-[#7c2233]/8' : ''}>
+                    <td className="px-2 py-2.5 tabular-nums text-zinc-300">
+                      <span className={row.position <= 3 ? 'accent-badge inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-[10px]' : ''}>{row.position}</span>
+                    </td>
+                    <td className="px-2 py-2.5">
                       <div className="flex items-center gap-2">
-                        <TeamLogo team={team} className="h-5 w-5 rounded-full object-cover" />
-                        <span className="whitespace-nowrap text-zinc-100">{team?.shortName ?? team?.name}</span>
+                        <TeamLogo team={team} className="h-7 w-7" />
+                        <span className="whitespace-nowrap text-sm font-medium text-zinc-100">{team?.shortName ?? team?.name}</span>
                       </div>
                     </td>
-                    <td className="px-1.5 py-2 text-right tabular-nums text-zinc-300">{row.played}</td>
-                    <td className="px-1.5 py-2 text-right tabular-nums text-zinc-300">{row.won}-{row.drawn}-{row.lost}</td>
-                    <td className="px-1.5 py-2 text-right tabular-nums text-zinc-300"><GoalLine gf={row.gf} ga={row.ga} gd={row.gd} /></td>
-                    <td className="px-2 py-2 text-right font-semibold tabular-nums text-zinc-100">{row.points}</td>
+                    <td className="px-1.5 py-2.5 text-right tabular-nums text-zinc-300">{row.played}</td>
+                    <td className="px-1.5 py-2.5 text-right tabular-nums text-zinc-300">{row.won}-{row.drawn}-{row.lost}</td>
+                    <td className="px-1.5 py-2.5 text-right tabular-nums text-zinc-300"><GoalLine gf={row.gf} ga={row.ga} gd={row.gd} /></td>
+                    <td className="px-2 py-2.5 text-right text-base font-bold tabular-nums text-zinc-100">{row.points}</td>
                   </tr>
                 ))}
               </tbody>
@@ -76,11 +78,11 @@ export function StandingsPage() {
           </div>
         </div>
       ) : (
-        <div className="panel-matte rounded-xl p-3">
+        <div className="panel-matte rounded-2xl p-3">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-stretch">
             {bracketRounds.map((round, roundIndex) => (
               <div key={round.title} className="relative flex-1">
-                <p className="mb-2 text-center text-[11px] uppercase tracking-wide text-[#d8bd75]">{round.title}</p>
+                <p className="mb-2 text-center text-[11px] uppercase tracking-wide text-rose-200">{round.title}</p>
                 <div className="space-y-3">
                   {round.matches.map((match, matchIndex) => (
                     <BracketMatchCard
@@ -152,8 +154,8 @@ function BracketMatchCard({ match, isLastRound }: { match: BracketMatch; isLastR
 
       {!isLastRound ? (
         <>
-          <span className="absolute -bottom-3 left-1/2 h-3 w-px -translate-x-1/2 bg-[#8f7a3f] lg:hidden" />
-          <span className="absolute -right-3 top-1/2 hidden h-px w-3 -translate-y-1/2 bg-[#8f7a3f] lg:block" />
+          <span className="absolute -bottom-3 left-1/2 h-3 w-px -translate-x-1/2 bg-[#a23a50]/65 lg:hidden" />
+          <span className="absolute -right-3 top-1/2 hidden h-px w-3 -translate-y-1/2 bg-[#a23a50]/65 lg:block" />
         </>
       ) : null}
     </article>
@@ -165,14 +167,14 @@ function TeamSlot({ slot }: { slot: BracketSlot }) {
     return (
       <div className="flex h-8 items-center justify-between rounded-md border border-dashed line-accent px-2">
         <span className="text-xs text-zinc-400">Не определена</span>
-        <span className="text-sm font-semibold text-[#d8bd75]">{slot.placeholder ?? '?'}</span>
+        <span className="text-sm font-semibold text-rose-200">{slot.placeholder ?? '?'}</span>
       </div>
     );
   }
 
   return (
     <div className="flex h-8 items-center gap-2 rounded-md border line-accent px-2">
-      <TeamLogo team={slot.team} className="h-4 w-4 rounded-full object-cover" />
+      <TeamLogo team={slot.team} className="h-4 w-4" />
       <p className="truncate text-xs text-zinc-100">{slot.team.shortName || slot.team.name}</p>
     </div>
   );
@@ -192,7 +194,7 @@ function ViewButton({
   return (
     <button
       type="button"
-      className={current === target ? 'panel-matte rounded-md px-3 py-1.5 text-xs text-zinc-100' : 'rounded-md px-3 py-1.5 text-xs text-zinc-400'}
+      className={current === target ? 'accent-badge rounded-lg px-3 py-1.5 text-xs font-medium' : 'rounded-lg px-3 py-1.5 text-xs text-zinc-400'}
       onClick={() => onClick(target)}
     >
       {label}

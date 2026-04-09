@@ -17,20 +17,20 @@ export function TeamDetailsPage() {
 
   return (
     <div className="space-y-4">
-      <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-4">
+      <div className="panel-matte rounded-2xl p-4">
         <div className="flex items-center gap-3">
-          <TeamLogo team={team.data} className="h-12 w-12 rounded-full border border-zinc-700 object-cover" />
+          <TeamLogo team={team.data} className="h-14 w-14" />
           <div>
             <h1 className="text-lg font-semibold">{team.data.name}</h1>
             <p className="text-sm text-zinc-400">{team.data.city} · Тренер {team.data.coach}</p>
           </div>
         </div>
       </div>
-      <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-4">
-        <h2 className="text-sm font-semibold">Состав</h2>
+      <div className="panel-matte rounded-2xl p-4">
+        <h2 className="section-title">Состав</h2>
         <div className="mt-3 space-y-2">
           {roster.map((player) => (
-            <Link key={player.id} to={`/players/${player.id}`} className="flex items-center justify-between rounded-lg border border-zinc-800 px-3 py-2">
+            <Link key={player.id} to={`/players/${player.id}`} className="panel-soft flex items-center justify-between rounded-xl px-3 py-2.5">
               <p className="text-sm">{player.displayName}</p>
               <p className="text-xs text-zinc-400">#{player.number} · {player.position}</p>
             </Link>
